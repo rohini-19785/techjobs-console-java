@@ -7,7 +7,9 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,6 +45,8 @@ public class JobData {
             }
         }
 
+        //Rohini: Added code line below to sort the List of values (Employer, Location, Position Type etc.)
+        Collections.sort(values);
         return values;
     }
 
@@ -51,7 +55,9 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
-        return allJobs;
+        //Rohini: Modified below line to return the copy of ArrayList
+        //return allJobs;
+        return new ArrayList<>(allJobs);
     }
 
     /**
@@ -76,8 +82,44 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            //Rohini: Modified the code below to add .toLowerCase() for both strings so the search is case insensitive
+            //if (aValue.contains(value)) {
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
                 jobs.add(row);
+            }
+        }
+
+        return jobs;
+    }
+
+    /**
+     * Returns results of search the jobs data by searching the search term in all columns
+     *
+     * @param value Search Term
+     * @return ArrayList of job HashMaps
+     */
+    //Rohini: Wrote this new method below findByValue
+    public static ArrayList<HashMap<String, String>> findByValue(String value)
+    {
+        // load data, if not already loaded
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs) {
+            for(String column: row.keySet()) {
+                String aValue = row.get(column);
+
+                //Rohini: Modified the code below to add .toLowerCase() for both strings so the search is case insensitive
+                //if (aValue.contains(value)) {
+                if (aValue.toLowerCase().contains(value.toLowerCase())) {
+                    jobs.add(row);
+                    //Add break so that if the same term exists in next columns the same record doesn't get added to jobs again
+                    //Read section Create Method findByValue
+                    //1. The method that you write should not contain duplicate jobs. So, for example,
+                    //   if a listing has position type “Web - Front End” and name “Front end web dev” then searching for “web” should not include the listing twice.
+                    break;
+                }
             }
         }
 

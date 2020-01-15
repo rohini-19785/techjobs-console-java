@@ -2,6 +2,7 @@ package org.launchcode.techjobs.console;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -21,6 +22,8 @@ public class TechJobs {
         columnChoices.put("position type", "Position Type");
         columnChoices.put("all", "All");
 
+
+
         // Top-level menu options
         HashMap<String, String> actionChoices = new HashMap<>();
         actionChoices.put("search", "Search");
@@ -32,7 +35,6 @@ public class TechJobs {
         while (true) {
 
             String actionChoice = getUserSelection("View jobs by:", actionChoices);
-
             if (actionChoice.equals("list")) {
 
                 String columnChoice = getUserSelection("List", columnChoices);
@@ -61,7 +63,9 @@ public class TechJobs {
                 String searchTerm = in.nextLine();
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    //Rohini: Added code line below to call new method written findByValue to search in all columns...
+                    //System.out.println("Search all fields not yet implemented.");
+                    printJobs(JobData.findByValue(searchTerm));
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -109,8 +113,26 @@ public class TechJobs {
     }
 
     // Print a list of jobs
+    //Rohini: Implemented the method below printJobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
 
-        System.out.println("printJobs is not implemented yet");
+        //System.out.println("printJobs is not implemented yet");
+
+        //Check the size of the arraylist if nothing found to display No Results message
+        if(someJobs.size() == 0)
+        {
+            System.out.println("No Results");
+            return;
+        }
+
+        System.out.println("*****");
+        for(HashMap<String, String> job : someJobs)
+        {
+            for(Map.Entry<String, String> entry : job.entrySet())
+            {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
+            System.out.println("*****");
+        }
     }
 }
