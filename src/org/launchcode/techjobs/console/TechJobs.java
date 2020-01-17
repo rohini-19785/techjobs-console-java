@@ -112,6 +112,7 @@ public class TechJobs {
         return choiceKeys[choiceIdx];
     }
 
+
     // Print a list of jobs
     //Rohini: Implemented the method below printJobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
